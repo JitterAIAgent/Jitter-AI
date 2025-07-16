@@ -11,7 +11,7 @@ def load_being_json():
     try:
         with open(being_path, 'r') as file:
             data = json.load(file)
-            
+
             # Extract all top-level fields
             model_provider = data.get("modelProvider")
             system = data.get("system")
@@ -40,7 +40,6 @@ def load_being_json():
             return {
                 "modelProvider": model_provider,
                 "system": system,
-                "character": character,
                 "name": name,
                 "bio": bio,
                 "personality": personality,
