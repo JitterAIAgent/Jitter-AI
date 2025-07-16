@@ -5,18 +5,19 @@ import json
 from memory.sqlite_actions import get_num_messages_by_id
 from parsers.create_prompt import create_system_prompt
 
-def open_router_provider(message):
+def open_router_provider(message, context_id):
     model = os.getenv("OPENROUTER_MODEL_ID", "moonshotai/kimi-k2:free")
     api_key = os.getenv("OPENROUTER_API_KEY")
 
     system_prompt = create_system_prompt()
 
-    previous_messages = get_num_messages_by_id("kim-kardashian", 10)
-
+    previous_messages = get_num_messages_by_id(context_id, 10)
     messages = [{"role": "system", "content": system_prompt}]
+
     # Add previous messages to the array
     for msg, role, created_at in reversed(previous_messages):
         messages.append({"role": role, "content": msg})
+        
     # Add the current user message
     messages.append({"role": "user", "content": message})
 

@@ -3,6 +3,7 @@ from parsers.parse_being_json import load_being_json
 from providers.open_router import open_router_provider
 
 being = load_being_json()
+context_id = being["contextId"]
 
 def get_ai_response(message):
 
@@ -17,10 +18,10 @@ def get_ai_response(message):
             
         if model_provider == "openRouter":
 
-            ai_response = open_router_provider(message)
+            ai_response = open_router_provider(message, context_id)
 
-            add_message(being["contextId"], message, "user")
-            add_message(being["contextId"], ai_response, "assistant")
+            add_message(context_id, message, "user")
+            add_message(context_id, ai_response, "assistant")
 
             return ai_response
         else:
