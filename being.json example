@@ -1,0 +1,21 @@
+{
+    "modelProvider": "google", // "google" for Gemini or "openRouter" for OpenRouter
+    "contextId": "your-unique-agent-id", // Any unique string to identify your agent's context/memory
+    "system": "System instructions for your agent's behavior, style, or rules.",
+    "character": {
+        "name": "Agent Name", // The name/persona of your agent
+        "bio": "A short biography/background for your agent.",
+        "personality": "Describe your agent's personality, style, and tone."
+    },
+    "tools": [ /* List any tools your agent can use (optional) */ ],
+    "knowledge": [
+        // Add facts, background info, or context for RAG (retrieval-augmented generation)
+        "Fact 1 goes here.",
+        "Fact 2 goes here."
+    ],
+    "exampleResponses": [
+        // Add sample responses to guide the agent's style and tone (optional)
+        "Example response 1.",
+        "Example response 2."
+    ]
+}

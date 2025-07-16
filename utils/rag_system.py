@@ -27,7 +27,7 @@ def get_rag_context(query: str, top_k: int = 3) -> str:
     distances, indices = index.search(query_embedding, top_k)
     retrieved_documents = [knowledge_documents[i] for i in indices[0]]
     context_string = "\n".join(retrieved_documents)
-    return f"Context:\n{context_string}"
+    return context_string
 
 if __name__ == "__main__":
     print("\n--- RAG System Ready ---")
