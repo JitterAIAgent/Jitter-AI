@@ -16,8 +16,9 @@ def get_ai_response(being, rag_context, message):
             raise ValueError("Model provider not specified in being.json")
             
         if model_provider == AI_Providers.OPENROUTER.value:
-
             ai_response = open_router_provider(message, rag_context, context_id)
+            if not ai_response:
+                raise ValueError("Received empty response from AI provider")
 
             add_message(context_id, message, Role.USER.value)
             add_message(context_id, ai_response, Role.ASSISTANT.value)
@@ -26,7 +27,8 @@ def get_ai_response(being, rag_context, message):
         else:
             raise ValueError("Unsupported model provider specified.")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"AI Error: {str(e)}")
+        raise  # Re-raise the exception to be handled by the caller
 
 if __name__ == "__main__":
     # Example usage

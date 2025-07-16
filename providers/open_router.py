@@ -6,7 +6,7 @@ from memory.sqlite_actions import get_num_messages_by_id
 from parsers.create_prompt import create_system_prompt
 from utils.enums import Role
 
-def open_router_provider(message, rag,context_id):
+def open_router_provider(message, rag, context_id):
     model = os.getenv("OPENROUTER_MODEL_ID", "moonshotai/kimi-k2:free")
     api_key = os.getenv("OPENROUTER_API_KEY")
 
@@ -29,20 +29,40 @@ def open_router_provider(message, rag,context_id):
     if not model:
         raise ValueError("Model ID is not specified in environment variables or defaults")
     
-    response = requests.post(
-        url="https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        data=json.dumps({
-            "model": model,
-            "messages": messages,
+    try:
+        response = requests.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            data=json.dumps({
+                "model": model,
+                "messages": messages,
+            })
+        )
+        
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        response_data = response.json()
+        
+        if "error" in response_data:
+            raise ValueError(f"API Error: {response_data['error']}")
             
-        })
-    )
-
-    return response.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+        content = response_data.get("choices", [{}])[0].get("message", {}).get("content")
+        if not content:
+            raise ValueError(f"Invalid API Response: {response_data}")
+            
+        return content
+        
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {str(e)}")
+        raise ValueError(f"Failed to get response from OpenRouter: {str(e)}")
+    except json.JSONDecodeError as e:
+        print(f"Invalid JSON response: {response.text}")
+        raise ValueError("Invalid response from OpenRouter")
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+        raise
 
 if __name__ == "__main__":
     # Example usage
