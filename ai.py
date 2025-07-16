@@ -1,4 +1,4 @@
-from parsers.create_prompt import create_message_prompt
+from memory.sqlite_actions import add_message
 from parsers.parse_being_json import load_being_json
 from providers.open_router import open_router_provider
 
@@ -9,11 +9,6 @@ def get_ai_response(message):
     if not message:
         raise ValueError("Message cannot be empty")
     
-    prompt = create_message_prompt(message)
-
-    if not prompt:
-        raise ValueError("Failed to create prompt from message")
-    
     try:
         model_provider = being["modelProvider"]
 
@@ -21,7 +16,13 @@ def get_ai_response(message):
             raise ValueError("Model provider not specified in being.json")
             
         if model_provider == "openRouter":
-            return open_router_provider(prompt)
+
+            ai_response = open_router_provider(message)
+
+            add_message(being["contextId"], message, "user")
+            add_message(being["contextId"], ai_response, "assistant")
+
+            return ai_response
         else:
             raise ValueError("Unsupported model provider specified.")
     except Exception as e:
@@ -29,5 +30,5 @@ def get_ai_response(message):
 
 if __name__ == "__main__":
     # Example usage
-    response = get_ai_response("Whos is Ray J")
+    response = get_ai_response("what is my name")
     print(response)
