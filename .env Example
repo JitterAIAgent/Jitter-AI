@@ -1,0 +1,3 @@
+# OpenRouter 
+OPENROUTER_API_KEY=
+OPENROUTER_MODEL_ID= # Default model ID "moonshotai/kimi-k2:free"
