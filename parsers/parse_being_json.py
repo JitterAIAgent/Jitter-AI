@@ -1,5 +1,6 @@
 import os
 import json
+import uuid
 
 def load_being_json():
     being_path = os.path.join(os.path.dirname(__file__), '..', 'being.json')
@@ -14,11 +15,16 @@ def load_being_json():
 
             # Extract all top-level fields
             model_provider = data.get("modelProvider")
+            contxt_id = data.get("contextId", "")
             system = data.get("system")
             character = data.get("character", {})
             tools = data.get("tools", [])
             knowlege = data.get("knowlege", [])
             example_responses = data.get("exampleResponses", [])
+
+            if not contxt_id:
+                context_id = uuid.uuid4()
+                print(f"No context ID provided. \nGenerated new context ID: {context_id}")
 
             if not character:
                 raise ValueError("Character information not specified in being.json")
@@ -39,6 +45,7 @@ def load_being_json():
 
             return {
                 "modelProvider": model_provider,
+                "contextId": contxt_id or str(context_id),
                 "system": system,
                 "name": name,
                 "bio": bio,

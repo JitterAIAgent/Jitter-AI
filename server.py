@@ -1,7 +1,9 @@
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from ai import get_ai_response
+from memory.sqlite_setup import setup_database
 from parsers.parse_being_json import load_being_json
 
 app = FastAPI()
@@ -31,3 +33,14 @@ def get_message_response(message: Message):
 @app.get("/being")
 def get_being_details():
    return being
+
+if __name__ == "__main__":
+    try:
+        setup_database()
+    except Exception as e:
+        print(f"Database setup failed: {e}")
+        print("Server will not start.")
+        exit(1)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
+    print("Server is running on http://localhost:8000")
+    print("Use Ctrl+C to stop the server")
