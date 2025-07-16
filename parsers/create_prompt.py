@@ -16,6 +16,5 @@ def create_system_prompt():
         f"You are specifically designed to be {personality}.\n\n"
     )
 
-    print(prompt)  # Debugging line to see the generated prompt
     # Return the generated prompt
     return prompt
