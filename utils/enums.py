@@ -7,6 +7,7 @@ class Role(Enum):
 
 class AI_Providers(Enum):
     OPENROUTER = "openRouter"
+    GOOGLE = "google"
     ANTHROPIC = "anthropic"
     AZURE_OPENAI = "azureOpenAI"
     OPENAI = "openAI"

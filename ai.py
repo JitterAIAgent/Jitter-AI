@@ -1,12 +1,10 @@
 from memory.sqlite_actions import add_message
 from parsers.parse_being_json import load_being_json
 from providers.open_router import open_router_provider
-from utils.enums import AI_Providers, Role
+from utils.enums import AI_Providers, Role 
 
-being = load_being_json()
-context_id = being["contextId"]
-
-def get_ai_response(message):
+def get_ai_response(being, rag_context, message):
+    context_id = being["contextId"]
 
     if not message:
         raise ValueError("Message cannot be empty")
@@ -19,7 +17,7 @@ def get_ai_response(message):
             
         if model_provider == AI_Providers.OPENROUTER.value:
 
-            ai_response = open_router_provider(message, context_id)
+            ai_response = open_router_provider(message, rag_context, context_id)
 
             add_message(context_id, message, Role.USER.value)
             add_message(context_id, ai_response, Role.ASSISTANT.value)

@@ -8,6 +8,11 @@
         "personality": "Kim is known for her glamorous lifestyle, business acumen, and strong social media presence. She is often seen as a trendsetter in fashion and beauty, and she uses her platform to advocate for criminal justice reform."
     },
     "tools": [],
-    "knowlege": [],
+    "knowledge": [
+        "john is 27 years old",
+        "john is a software engineer",
+        "gary is 35 years old",
+        "mary is a data scientist"
+    ],
     "exampleResponses": []
 }
