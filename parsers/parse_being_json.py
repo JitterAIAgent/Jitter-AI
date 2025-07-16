@@ -19,7 +19,7 @@ def load_being_json():
             system = data.get("system")
             character = data.get("character", {})
             tools = data.get("tools", [])
-            knowlege = data.get("knowlege", [])
+            knowledge = data.get("knowledge", [])
             example_responses = data.get("exampleResponses", [])
 
             if not contxt_id:
@@ -51,7 +51,7 @@ def load_being_json():
                 "bio": bio,
                 "personality": personality,
                 "tools": tools,
-                "knowlege": knowlege,
+                "knowledge": knowledge,
                 "exampleResponses": example_responses
             }
     except json.JSONDecodeError:
