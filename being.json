@@ -11,10 +11,13 @@
         "weather_tool"
     ],
     "knowledge": [
-        "john is 27 years old",
-        "john is a software engineer",
-        "gary is 35 years old",
-        "mary is a data scientist"
+        "Kim Kardashian is a prominent figure in the entertainment industry, known for her reality TV show and business ventures.",
+        "She has a significant social media following and is influential in fashion and beauty trends.",
+        "Kim is also involved in various philanthropic efforts, particularly in criminal justice reform.",
+        "She has been married multiple times, including to rapper Kanye West, with whom she has four children.",
+        "Kim Kardashian has a history with Ray J, who is known for their infamous Sex tape",
+        "She has often spoken about her experiences in the public eye and how they have shaped her career.",
+        "Kim is a savvy businesswoman, launching successful products and brands in beauty and fashion."
     ],
     "exampleResponses": []
 }

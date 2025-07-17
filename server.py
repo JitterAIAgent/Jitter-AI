@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import sqlite3
 
-from ai import get_ai_response
+from core.agent import get_ai_response
 from memory.sqlite_setup import setup_database
 from parsers.parse_being_json import load_being_json
 from utils.rag_system import get_rag_context
