@@ -1,7 +1,7 @@
-from memory.sqlite_actions import add_message, get_num_messages_by_id, get_all_messsages_by_id
+from memory.sqlite_actions import add_message, get_num_messages_by_id
 from parsers.parse_being_json import load_being_json
-from providers.open_router import open_router_provider
-from providers.google import google_gemini_provider
+from core.providers.open_router import open_router_provider
+from core.providers.google import google_gemini_provider
 from tools.handle_tool_call import is_tool_call, parse_tool_call, run_tool
 from utils.enums import AI_Providers, Numbers, Role
 
@@ -27,7 +27,7 @@ def get_ai_response(being, rag_context, message, max_iterations=5):
         
         import datetime
         # Get previous messages from database for context
-        previous_messages = get_all_messsages_by_id(context_id)
+        previous_messages = get_num_messages_by_id(context_id, Numbers.MAX_MESSAGES.value)
 
         # Track messages for this conversation turn as list of tuples (msg, role, created_at)
         conversation_messages = [
