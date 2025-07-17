@@ -1,4 +1,5 @@
 TOOL_REGISTRY = {}
+
 # Example structure for an entry:
 # TOOL_REGISTRY = {
 #     "tool_name_1": {
