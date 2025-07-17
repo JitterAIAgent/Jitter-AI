@@ -4,26 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import sqlite3
 
-import tools.built_in_tools
-
-# --- CORRECTED DEBUG BLOCK IN lightai/server.py ---
-from tools.tool_registry import TOOL_REGISTRY # Import the global registry
-print("\n--- Registered Tools (DEBUG) ---")
-if TOOL_REGISTRY:
-    for tool_name, tool_data in TOOL_REGISTRY.items(): # tool_data is {'function': <callable>, 'schema': {...}}
-        # The actual schema for the LLM is tool_data['schema']
-        # This schema directly contains 'name', 'description', and 'parameters'
-        
-        print(f"  Tool Name: {tool_name}")
-        # Access the description directly from tool_data['schema']
-        print(f"    Description: {tool_data['schema']['description']}") # <--- CORRECTED LINE
-        # Access parameters directly from tool_data['schema']['parameters']
-        print(f"    Parameters: {tool_data['schema']['parameters']['properties']}") # <--- CORRECTED LINE
-else:
-    print("  No tools registered yet.")
-print("----------------------------\n")
-# --- END DEBUG BLOCK ---
-
 from core.agent import get_ai_response
 from memory.sqlite_setup import setup_database
 from parsers.parse_being_json import load_being_json
@@ -61,6 +41,10 @@ def print_being_details():
     print(f"Knowledge Documents: {len(being['knowledge'])}")
     print(f"Example Responses: {len(being['exampleResponses'])}")
     print("\n" + "="*50 + "\n")
+
+import tools.built_in_tools
+import tools.deck_of_cards
+import tools.user_tools
 
 class Message(BaseModel):
     content: str

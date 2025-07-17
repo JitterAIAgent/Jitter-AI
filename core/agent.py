@@ -1,3 +1,4 @@
+import json
 from memory.sqlite_actions import add_message, get_num_messages_by_id
 from parsers.parse_being_json import load_being_json
 from core.providers.open_router import open_router_provider
@@ -56,14 +57,19 @@ def get_ai_response(being, rag_context, message, max_iterations=5):
                 tool_name, params = parse_tool_call(ai_response)
 
                 if tool_name:
-                    tool_result = run_tool(tool_name, params)
+                    tool_result_raw = run_tool(tool_name, params)
+
+                    if isinstance(tool_result_raw, (dict, list)):
+                        tool_result_str = json.dumps(tool_result_raw, indent=2)
+                    else:
+                        tool_result_str = str(tool_result_raw)
 
                     # Add tool result to conversation
                     now = datetime.datetime.now().isoformat()
-                    conversation_messages.append((tool_result, Role.TOOL.value, now))
+                    conversation_messages.append((tool_result_str, Role.TOOL.value, now))
 
                     # Continue the loop with the tool result as the new "message"
-                    message = tool_result
+                    message = tool_result_str
 
                     return get_ai_response(being, rag_context, message, max_iterations - iteration - 1)
                 else:
