@@ -4,6 +4,7 @@ class Role(Enum):
     USER = "user"
     ASSISTANT = "assistant"
     SYSTEM = "system"
+    TOOL= "tool"
 
 class AI_Providers(Enum):
     OPENROUTER = "openRouter"
@@ -12,3 +13,6 @@ class AI_Providers(Enum):
     AZURE_OPENAI = "azureOpenAI"
     OPENAI = "openAI"
     LOCAL = "local"
+
+class Numbers(Enum):
+    MAX_MESSAGES = 20

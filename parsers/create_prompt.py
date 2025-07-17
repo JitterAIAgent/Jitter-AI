@@ -1,4 +1,8 @@
 from parsers.parse_being_json import load_being_json
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from tools.tool_registry import TOOL_REGISTRY
 
 
 being = load_being_json()
@@ -9,6 +13,7 @@ def create_system_prompt(rag):
     bio = being['bio']
     personality = being['personality']
     example_responses = being["exampleResponses"]
+    tools = being["tools"]
 
     # Format RAG facts as background knowledge
     rag_facts = ""
@@ -34,7 +39,30 @@ def create_system_prompt(rag):
         prompt += "\nEXAMPLE RESPONSES (for style and reference):\n"
         for ex in example_responses:
             prompt += f"- {ex}\n"
+    
+    if len(tools) > 0:
+        prompt += "\nTOOLS AVAILABLE:\n"
+        # Iterate through tools and format them
+        for tool_key in tools:
+            # If tool is a string, look up in registry
+            if isinstance(tool_key, str) and tool_key in TOOL_REGISTRY:
+                reg = TOOL_REGISTRY[tool_key]
+                prompt += f"- {reg['name']}: {reg['description']}\n"
+                if 'parameters' in reg:
+                    prompt += f"  Parameters: {reg['parameters']}\n"
+            # If tool is a dict, use its info directly
+            elif isinstance(tool_key, dict):
+                prompt += f"- {tool_key.get('name', 'Unknown')}: {tool_key.get('description', '')}\n"
+            else:
+                prompt += f"- {str(tool_key)}\n"
+        prompt += ("\nINSTRUCTION: To use a tool, reply with the following format on a single line:\n"
+                   "FUNCTION: <tool_name> PARAMS: { 'param1': 'value1', 'param2': 'value2' }\n"
+                   "Example: FUNCTION: weather PARAMS: { 'location': 'New York' }\n"
+                   "I will handle the tool execution for you.\n")
 
     # Return the generated prompt
     # print(f"Generated system prompt: {prompt}")
     return prompt
+
+if __name__ == "__main__":
+    create_system_prompt("")
