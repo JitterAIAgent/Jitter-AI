@@ -11,7 +11,7 @@ from memory.sqlite_actions import get_num_messages_by_id
 from parsers.create_prompt import create_system_prompt
 from utils.enums import Role
 
-def google_gemini_provider(message, rag, context_id):
+def google_gemini_provider(message, rag, previous_messages=[]):
     api_key = os.getenv("GOOGLE_API_KEY")
     model_id = os.getenv("GOOGLE_MODEL_ID", "gemini-1.5-flash")
 
@@ -25,8 +25,6 @@ def google_gemini_provider(message, rag, context_id):
     model = genai.GenerativeModel(model_id)
 
     try:
-        # Get previous messages and convert to Gemini format
-        previous_messages = get_num_messages_by_id(context_id, 10)
         history = []
         # Ensure chronological order: oldest first
         for msg, role, _ in sorted(previous_messages, key=lambda x: x[2]):

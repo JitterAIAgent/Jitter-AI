@@ -6,13 +6,12 @@ from memory.sqlite_actions import get_num_messages_by_id
 from parsers.create_prompt import create_system_prompt
 from utils.enums import Role
 
-def open_router_provider(message, rag, context_id):
+def open_router_provider(message, rag, previous_messages=[]):
     model = os.getenv("OPENROUTER_MODEL_ID", "moonshotai/kimi-k2:free")
     api_key = os.getenv("OPENROUTER_API_KEY")
 
     system_prompt = create_system_prompt(rag)
 
-    previous_messages = get_num_messages_by_id(context_id, 10)
     messages = [{"role": Role.SYSTEM.value, "content": system_prompt}]
 
     # Add previous messages to the array
