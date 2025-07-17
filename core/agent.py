@@ -5,6 +5,7 @@ from core.providers.google import google_gemini_provider
 from tools.handle_tool_call import is_tool_call, parse_tool_call, run_tool
 from utils.enums import AI_Providers, Numbers, Role
 
+
 def call_model(model_provider, message, rag_context, previous_messages):
     if model_provider == AI_Providers.OPENROUTER.value:
         return open_router_provider(message, rag_context, previous_messages)
