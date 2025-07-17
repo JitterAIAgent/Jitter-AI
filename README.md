@@ -116,6 +116,67 @@ Below is a template you can use and modify. You do NOT need to copy the Kim Kard
 
 Once your `being.json` is ready, set your API keys in `.env`, and start the server and frontend as described above.
 
+## How to Add Custom Tools
+
+You can extend your agent with custom tools (functions) that it can call during a conversation. Tools are defined in `tools/tool_registry.py` and implemented in `tools/handle_tool_call.py`.
+
+### 1. Register Your Tool
+
+Add your tool to `tool_registry.py`:
+
+```python
+TOOL_REGISTRY = {
+    "weather_tool": {
+        "name": "weather",
+        "description": "Get current weather information for a specified location.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The location to get the weather for."
+                }
+            },
+            "required": ["location"]
+        }
+    },
+    # Add more tools here
+}
+```
+
+- `name`: The function name the agent will call (e.g., `weather`).
+- `description`: What the tool does.
+- `parameters`: The expected input parameters and their types.
+
+### 2. Implement Your Tool
+
+Add the function logic to `handle_tool_call.py`:
+
+```python
+def weather_tool(location):
+    # Your logic here (e.g., call a weather API)
+    return f"The weather in {location} is currently sunny and 25°C."
+```
+
+- The function name should match the `name` in the registry.
+- You can add as many tool functions as you want.
+
+### 3. Enable Your Tool for the Agent
+
+In your `being.json`, add the tool name to the `tools` array:
+
+```json
+"tools": ["weather"]
+```
+
+When the agent needs to use a tool, it will reply in this format:
+
+```
+FUNCTION: weather PARAMS: { 'location': 'Montreal' }
+```
+
+Your backend will parse this and run the corresponding function.
+
 ## Troubleshooting
 - Ensure your API keys are set and valid.
 - Check the logs for errors if the server does not start.
