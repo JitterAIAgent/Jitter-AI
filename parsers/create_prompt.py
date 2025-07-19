@@ -240,6 +240,6 @@ def create_system_prompt(rag):
 
     # Return the generated prompt
 
-    print(f"Generated system prompt: {prompt}")
+    # print(f"Generated system prompt: {prompt}")
 
     return prompt
