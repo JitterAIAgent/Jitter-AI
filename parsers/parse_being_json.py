@@ -2,9 +2,13 @@ import os
 import json
 import uuid
 
-def load_being_json():
-    being_path = os.path.join(os.path.dirname(__file__), '..', 'being.json')
+BEINGS_DIR = os.path.join(os.path.dirname(__file__), '..', 'beings')
+
+def load_being_json(being_name: str = "being"):
+    being_path = os.path.join(BEINGS_DIR, f"{being_name}.json")
     being_path = os.path.abspath(being_path)
+
+
 
     if not os.path.exists(being_path):
         raise FileNotFoundError("The 'being.json' file does not exist")

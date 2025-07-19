@@ -2,7 +2,6 @@ import os
 import requests
 import json
 
-from memory.sqlite_actions import get_num_messages_by_id
 from parsers.create_prompt import create_system_prompt
 from utils.enums import Role
 
