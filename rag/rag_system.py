@@ -3,7 +3,7 @@ import sys
 
 from dotenv import load_dotenv
 
-from rag.rag_file_parser import text_file_rag
+from rag.rag_file_parser import text_file_rag, pdf_file_rag, html_file_rag, csv_file_rag, md_file_rag
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sentence_transformers import SentenceTransformer
@@ -25,19 +25,33 @@ def file_rag():
         return rag_contents
     for filename in os.listdir(files_dir):
         try:
-            if filename.endswith('.txt'):
-                file_path = os.path.join(files_dir, filename)
-                chunks = text_file_rag(file_path)
-                base_name = os.path.splitext(filename)[0]
+            def add_chunks_to_rag_contents(base_name, chunks):
                 if isinstance(chunks, list):
                     for idx, chunk in enumerate(chunks):
-                        # Use base_name_chunkN as key for each chunk
                         rag_contents[f"{base_name}_chunk{idx+1}"] = chunk
                 else:
                     rag_contents[base_name] = chunks
-            if filename.endswith('.pdf'):
-                # If you want to handle PDF files, you can add logic here
-                pass
+
+            file_path = os.path.join(files_dir, filename)
+            base_name = os.path.splitext(filename)[0]
+            if filename.endswith('.txt'):
+                chunks = text_file_rag(file_path)
+                add_chunks_to_rag_contents(base_name, chunks)
+            elif filename.endswith('.pdf'):
+                chunks = pdf_file_rag(file_path)
+                add_chunks_to_rag_contents(base_name, chunks)
+            elif filename.endswith('.html') or filename.endswith('.htm'):
+                chunks = html_file_rag(file_path)
+                add_chunks_to_rag_contents(base_name, chunks)
+            elif filename.endswith('.csv'):
+                chunks = csv_file_rag(file_path)
+                add_chunks_to_rag_contents(base_name, chunks)
+            elif filename.endswith('.md'):
+                chunks = md_file_rag(file_path)
+                add_chunks_to_rag_contents(base_name, chunks)
+            else:
+                print(f"[file_rag] Unsupported file type: {filename} ({os.path.splitext(filename)[1]})")
+            
         except Exception as e:
             print(f"[file_rag] Error reading {filename}: {e}")
     return rag_contents
