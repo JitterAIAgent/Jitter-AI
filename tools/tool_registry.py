@@ -28,7 +28,7 @@ def register_tool(tool_name: str, tool_function, tool_schema: dict):
         "function": tool_function,
         "schema": tool_schema
     }
-    print(f"[INFO] Tool '{tool_name}' registered successfully.")
+    # print(f"[INFO] Tool '{tool_name}' registered successfully.")
 
 def get_tool_function(tool_name: str):
     """Retrieves the callable function for a registered tool."""

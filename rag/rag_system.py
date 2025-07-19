@@ -6,8 +6,6 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
 
-from parsers.parse_being_json import load_being_json
-
 def get_index_model(being):
     knowledge_documents = being["knowledge"]
     model = None
