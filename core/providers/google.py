@@ -7,11 +7,9 @@ import google.generativeai as genai
 
 load_dotenv()
 
-from memory.sqlite_actions import get_num_messages_by_id
-from parsers.create_prompt import create_system_prompt
 from utils.enums import Role
 
-def google_gemini_provider(message, rag, previous_messages=[]):
+def google_gemini_provider(system_prompt, message, previous_messages=[]):
     api_key = os.getenv("GOOGLE_API_KEY")
     model_id = os.getenv("GOOGLE_MODEL_ID", "gemini-1.5-flash")
 
@@ -39,7 +37,6 @@ def google_gemini_provider(message, rag, previous_messages=[]):
         chat = model.start_chat(history=history)
 
         # Prepare the current message with system prompt for first message
-        system_prompt = create_system_prompt(rag)
         final_message = f"{system_prompt}\n\n{message}"
 
         # Send the final message and get response
@@ -53,10 +50,3 @@ def google_gemini_provider(message, rag, previous_messages=[]):
     except Exception as e:
         print(f"Error details: {str(e)}")
         raise ValueError(f"Failed to get response from Gemini: {str(e)}")
-
-if __name__ == "__main__":
-    try:
-        response = google_gemini_provider("Hello!", "", "test-id")
-        print(response)
-    except Exception as e:
-        print(f"Error: {e}")

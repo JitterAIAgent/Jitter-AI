@@ -1,5 +1,6 @@
 import json
 from memory.sqlite_actions import add_message, get_num_messages_by_id
+from parsers.create_prompt import create_system_prompt
 from parsers.parse_being_json import load_being_json
 from core.providers.open_router import open_router_provider
 from core.providers.google import google_gemini_provider
@@ -7,11 +8,11 @@ from tools.handle_tool_call import is_tool_call, parse_tool_call, run_tool
 from utils.enums import AI_Providers, Numbers, Role
 
 
-def call_model(model_provider, message, rag_context, previous_messages):
+def call_model(model_provider, system_prompt, message, rag_context, previous_messages):
     if model_provider == AI_Providers.OPENROUTER.value:
-        return open_router_provider(message, rag_context, previous_messages)
+        return open_router_provider(system_prompt, message, rag_context, previous_messages)
     elif model_provider == AI_Providers.GOOGLE.value:
-        return google_gemini_provider(message, rag_context, previous_messages)
+        return google_gemini_provider(system_prompt, message, previous_messages)
     else:
         raise ValueError(f"Unsupported model provider specified: {model_provider}")
 
@@ -43,7 +44,8 @@ def get_ai_response(being, rag_context, message, max_iterations=5):
 
         # Handle tool calling loop with iteration limit
         for iteration in range(max_iterations):
-            ai_response = call_model(model_provider, message, rag_context, conversation_messages)
+            system_prompt = create_system_prompt(rag_context, being)
+            ai_response = call_model( model_provider, system_prompt, message, rag_context, conversation_messages)
 
             if not ai_response:
                 raise ValueError("Received empty response from AI provider")
