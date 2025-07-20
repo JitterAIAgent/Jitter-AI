@@ -15,7 +15,9 @@ tools = [
     "flip_coin",
 ]
 
-if TAVILY_API_KEY := os.getenv("TAVILY_API_KEY"):
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "")
+
+if not TAVILY_API_KEY:
     tools.append("search_web")
 
 def get_built_in_tools():
@@ -204,15 +206,14 @@ def search_web(query: str)-> Union[str, List[Dict[str, Any]]]:
         A list of dictionaries, where each dictionary represents a search result,
         or a string message if no results were found.
     """
-
-    api_key = os.getenv("TAVILY_API_KEY", "")
     
     print(f"[TOOL EXECUTION] search_web: {query}")
 
-    tavily_client = TavilyClient(api_key=api_key)
+    tavily_client = TavilyClient(api_key=TAVILY_API_KEY)
     response = tavily_client.search(query, num_results=5)
 
     search_results = response.get("results", [])
+    
     if not search_results:
         return "No results found for the query."
 
