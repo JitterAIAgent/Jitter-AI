@@ -1,4 +1,7 @@
+import os
+from typing import Any, Dict, List, Union
 from .tool_decorator import tool
+from tavily import TavilyClient
 
 import datetime
 import math
@@ -9,8 +12,11 @@ tools = [
     "perform_calculation",
     "convert_units",
     "generate_random_number",
-    "flip_coin"
+    "flip_coin",
 ]
+
+if TAVILY_API_KEY := os.getenv("TAVILY_API_KEY"):
+    tools.append("search_web")
 
 def get_built_in_tools():
     """
@@ -186,3 +192,28 @@ def flip_coin() -> str:
     result = random.choice(["Heads", "Tails"])
     print(f"[TOOL EXECUTION] flip_coin: {result}")
     return result
+
+@tool
+def search_web(query: str)-> Union[str, List[Dict[str, Any]]]:
+    """Performs a web search using the Tavily API.
+
+    Args:
+        query: The search query string.
+
+    Returns:
+        A list of dictionaries, where each dictionary represents a search result,
+        or a string message if no results were found.
+    """
+
+    api_key = os.getenv("TAVILY_API_KEY", "")
+    
+    print(f"[TOOL EXECUTION] search_web: {query}")
+
+    tavily_client = TavilyClient(api_key=api_key)
+    response = tavily_client.search(query, num_results=5)
+
+    search_results = response.get("results", [])
+    if not search_results:
+        return "No results found for the query."
+
+    return search_results
