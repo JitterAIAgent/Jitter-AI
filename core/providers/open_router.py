@@ -2,15 +2,11 @@ import os
 import requests
 import json
 
-from memory.sqlite_actions import get_num_messages_by_id
-from parsers.create_prompt import create_system_prompt
 from utils.enums import Role
 
-def open_router_provider(message, rag, previous_messages=[]):
+def open_router_provider(system_prompt, message, rag, previous_messages=[]):
     model = os.getenv("OPENROUTER_MODEL_ID", "moonshotai/kimi-k2:free")
     api_key = os.getenv("OPENROUTER_API_KEY")
-
-    system_prompt = create_system_prompt(rag)
 
     messages = [{"role": Role.SYSTEM.value, "content": system_prompt}]
 

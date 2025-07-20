@@ -14,11 +14,11 @@ built_in_tools_list = get_built_in_tools()
 
 
 
-being = load_being_json()
+# being = load_being_json()
 
 
 
-def create_system_prompt(rag):
+def create_system_prompt(rag, being):
 
     system = being["system"]
 
@@ -240,6 +240,6 @@ def create_system_prompt(rag):
 
     # Return the generated prompt
 
-    print(f"Generated system prompt: {prompt}")
+    # print(f"Generated system prompt: {prompt}")
 
     return prompt
