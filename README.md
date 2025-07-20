@@ -1,186 +1,61 @@
-# Light-AI
 
-Light-AI is a modular framework for building conversational AI agents with RAG (Retrieval-Augmented Generation) and multi-provider support (Google Gemini, OpenRouter, etc.).
+# Jitter
 
-## Getting Started
+Jitter is a simple, modular framework for building conversational AI agents with retrieval-augmented generation (RAG) and multi-provider support (Google Gemini, OpenRouter, etc.).
 
-### 1. Install Dependencies
+## How to Use
 
-```bash
-pip install -r requirements.txt
-```
+1. **Set up your environment:**
+   - Run the setup script to create a virtual environment and install dependencies:
+     ```bash
+     python setup.py
+     ```
+   - Follow the printed instructions to activate your environment before starting Jitter.
+   
+2. **Configure environment variables:**
+   - Copy the provided `.env Example` file and edit it to add your API keys and model values for Google or OpenRouter.
+   - Set `OPENROUTER_API_KEY`, `OPENROUTER_MODEL_ID`, `GOOGLE_API_KEY`, and `GOOGLE_MODEL_ID` as needed.
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 2. Configure Environment Variables
 
-Copy the following example to a new file named `.env` in your project root, then add your own values 
+3. **Create your agent:**
+   - Copy and edit the provided being template (e.g., `being.json example`) to define your agent's character, knowledge, and style.
+   - Place your being file in the `beings` directory (e.g., `beings/your_agent.json`).
+   - Add any `.txt`, `.pdf`, `.html`, `.csv`, or `.md` files to the `files` folder for extra knowledge (RAG).
 
-### 3. Create/Edit `being.json`
 
-This file defines your agent's character, system instructions, and knowledge base. Example:
 
-```json
-{
-  "modelProvider": "google",
-  "contextId": "kim-kardashian",
-  "system": "you must always respond in the character of Kim Kardashian...",
-  "character": {
-    "name": "Kim Kardashian",
-    "bio": "Kim Kardashian is a media personality...",
-    "personality": "Kim is known for her glamorous lifestyle..."
-  },
-  "tools": [],
-  "knowledge": [
-    "john is 27 years old",
-    "john is a software engineer"
-  ],
-  "exampleResponses": [
-    "Hi, I'm Kim! How can I help you today?",
-    "Of course, darling! Let me tell you more."
-  ]
-}
-```
+4. **Start the backend server:**
+   ```bash
+   python main.py --being your_agent
+   ```
+   - Replace `your_agent` with the name of your being file (without `.json`).
+   - If you do not specify `--being`, the default agent will be loaded.
+   - The API will be available at `http://localhost:8000`.
 
-- Change `modelProvider` to `google` or `openRouter` as needed.
-- Add facts to `knowledge` for RAG.
-- Add style examples to `exampleResponses`.
 
-### 4. Start the Backend Server
+5. **(Optional) Start the client:**
+   - After starting your agent, open a new terminal window.
+   - Change directory to the `client` folder:
+     ```bash
+     cd client
+     ```
+   - Start the client:
+     ```bash
+     npm run dev
+     ```
 
-```bash
-python server.py
-```
+6. **Chat with your agent:**
+   - Use the `/message` endpoint to send messages and get responses.
+   - Use the `/being` endpoint to see your agent's details.
 
-- The server will start at `http://localhost:8000`.
-- You can interact with the API via `/message` and `/being` endpoints.
-
-### 5. Frontend (Client)
-
-If you have a `client` folder (e.g., React, Vue, etc.), open a new terminal and run:
-
-```bash
-cd client
-npm install
-npm start
-```
-
-- The frontend will connect to the backend API at `http://localhost:8000`.
-
-## How to Create Your Own Agent
-
-To create your own agent, you need to define a `being.json` file in the project root. This file controls the character, personality, system instructions, and knowledge base for your agent. You can use any persona, style, or knowledge you want.
-
-### Example: Creating a Custom `being.json`
-
-Below is a template you can use and modify. You do NOT need to copy the Kim Kardashian example—just fill in your own details:
-
-```json
-{
-  "modelProvider": "openRouter", // or "google"
-  "model": "moonshotai/kimi-k2:free", // required for openRouter, ignored for google
-  "contextId": "my-unique-agent-id",
-  "system": "You are a friendly assistant who loves science fiction and always answers with optimism.",
-  "character": {
-    "name": "Alex Star",
-    "bio": "Alex is a space explorer and AI expert, known for their curiosity and helpfulness.",
-    "personality": "Alex is upbeat, curious, and always tries to make learning fun."
-  },
-  "tools": ["calculator", "weather"],
-  "knowledge": [
-    "Mars is the fourth planet from the Sun.",
-    "The speed of light is approximately 299,792 kilometers per second.",
-    "Alex's favorite book is 'Dune' by Frank Herbert."
-  ],
-  "exampleResponses": [
-    "Hi! I'm Alex. Ready to explore the universe with you!",
-    "Absolutely! The speed of light is about 299,792 km/s.",
-    "Mars is a fascinating planet—did you know it has the largest volcano in the solar system?"
-  ]
-}
-```
-
-**Key Fields:**
-- `modelProvider`: Choose `google` for Gemini or `openRouter` for OpenRouter. This controls which backend is used.
-- `model`: (OpenRouter only) Specify the model string, e.g. `moonshotai/kimi-k2:free` or any supported model from OpenRouter.
-- `contextId`: Any unique string to identify your agent's context/memory.
-- `system`: Instructions for the agent's behavior, style, or rules.
-- `character`: Define the agent's name, bio, and personality.
-- `tools`: List any tools your agent can use (optional).
-- `knowledge`: Add facts, background info, or context for RAG (retrieval-augmented generation).
-- `exampleResponses`: Add sample responses to guide the agent's style and tone (optional).
-
-**Tips:**
-- Be creative! You can make your agent a celebrity, a fictional character, a helpful assistant, or anything you want.
-- The more detailed your `bio`, `personality`, and `knowledge`, the more realistic and useful your agent will be.
-- For OpenRouter, make sure to set the `model` field to a valid model string.
-- For Gemini, the `model` field is ignored; use `GOOGLE_MODEL_ID` in your `.env` file instead.
-
-Once your `being.json` is ready, set your API keys in `.env`, and start the server and frontend as described above.
-
-## How to Add Custom Tools
-
-You can extend your agent with custom tools (functions) that it can call during a conversation. Tools are defined in `tools/tool_registry.py` and implemented in `tools/handle_tool_call.py`.
-
-### 1. Register Your Tool
-
-Add your tool to `tool_registry.py`:
-
-```python
-TOOL_REGISTRY = {
-    "weather_tool": {
-        "name": "weather",
-        "description": "Get current weather information for a specified location.",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "location": {
-                    "type": "string",
-                    "description": "The location to get the weather for."
-                }
-            },
-            "required": ["location"]
-        }
-    },
-    # Add more tools here
-}
-```
-
-- `name`: The function name the agent will call (e.g., `weather`).
-- `description`: What the tool does.
-- `parameters`: The expected input parameters and their types.
-
-### 2. Implement Your Tool
-
-Add the function logic to `handle_tool_call.py`:
-
-```python
-def weather_tool(location):
-    # Your logic here (e.g., call a weather API)
-    return f"The weather in {location} is currently sunny and 25°C."
-```
-
-- The function name should match the `name` in the registry.
-- You can add as many tool functions as you want.
-
-### 3. Enable Your Tool for the Agent
-
-In your `being.json`, add the tool name to the `tools` array:
-
-```json
-"tools": ["weather"]
-```
-
-When the agent needs to use a tool, it will reply in this format:
-
-```
-FUNCTION: weather PARAMS: { 'location': 'Montreal' }
-```
-
-Your backend will parse this and run the corresponding function.
-
-## Troubleshooting
-- Ensure your API keys are set and valid.
-- Check the logs for errors if the server does not start.
-- Make sure your `being.json` is correctly formatted and includes all required fields.
+## Features
+- Easy agent customization via `being.json` (character, knowledge, style)
+- Supports RAG from `.txt`, `.pdf`, `.html`, `.csv`, `.md` files
+- Multi-provider: Google Gemini, OpenRouter, and more
+- Add custom tools/functions for your agent to use
 
 ## License
 MIT
