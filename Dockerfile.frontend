@@ -1,0 +1,20 @@
+# Dockerfile for Node.js frontend
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY client/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy frontend source code
+COPY client/ ./
+
+# Expose port (adjust based on your frontend port)
+EXPOSE 8080
+
+# Command to run the frontend
+CMD ["npm", "start"]
