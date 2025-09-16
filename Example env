@@ -11,17 +11,10 @@ GOOGLE_API_KEY= # Your Google API key
 GOOGLE_MODEL_ID=gemini-2.0-flash # Default is gemini-2.0-flash
 
 # Tavily
-TAVILY_API_KEY= # Your Tavily API key
-
-# Twitter Configuration
-Generate_Tweet=false # Set to True to enable tweet generation
-Tweet_Interval=2 # Interval in minutes for tweet generation
-TWITTER_USERNAME= # Your Twitter username
-TWITTER_PASSWORD= # Your Twitter password
-Twitter_EMAIL= # Your Twitter email
+TAVILY_API_KEY= # Your Tavily API key for enalbing web search
 
 # Agent Configuration
-AGENT_ALIVE=True  # Set to True to keep the agent alive
+AGENT_ALIVE=false  # Set to True to keep the agent alive *this is experimental*
 MAX_ITERATIONS=5  # Maximum iterations for the agent to run
 
 # File RAG configuration
